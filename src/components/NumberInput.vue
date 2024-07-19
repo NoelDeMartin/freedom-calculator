@@ -1,5 +1,5 @@
 <template>
-    <div class="relative inline py-1 px-2 pr-3 transition-[padding] focus-within:pr-6">
+    <div class="relative inline py-1 px-2 pr-3 transition-[padding] focus-within:pr-6 motion-reduce:transition-none">
         <span class="invisible" aria-hidden="true">{{ model }}</span>
         <input
             v-model="model"
@@ -23,7 +23,7 @@ defineProps({
 const model = defineModel<number>();
 
 watchEffect(() => {
-    if (model.value) {
+    if (model.value && model.value >= 0) {
         return;
     }
 
