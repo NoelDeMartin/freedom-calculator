@@ -5,6 +5,7 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
+        "deploy": "noeldemartin-deploy-app noeldemartin/freedom-calculator freedom-calculator.noeldemartin.com",
         "dev": "vite",
         "lint": "noeldemartin-lint src"
     },
@@ -25,6 +26,7 @@
         "prettier-eslint-cli": "^8.0.1",
         "prettier-plugin-tailwindcss": "^0.6.5",
         "typescript": "~5.4.0",
+        "unplugin-vue-components": "^0.27.3",
         "vite": "^5.3.1",
         "vue-tsc": "^2.0.21"
     },
