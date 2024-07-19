@@ -1,13 +1,15 @@
 <template>
     <div class="rounded-lg bg-gray-200 p-2">
         <div class="flex flex-col space-y-2 p-8">
-            <p class="space-x-1">
-                <span class="mr-2 text-xl">How much do you have?</span>
+            <p class="space-x-1 text-center md:text-start">
+                <span class="mr-0 text-xl md:mr-2">How much do you have?</span>
+                <br class="mb-3 md:hidden">
                 <NumberInput v-model="wealth" name="wealth" class="text-base font-light" />
                 <span class="text-base font-light text-gray-500">(euros, dollars, berries, etc.)</span>
             </p>
-            <p class="space-x-1">
-                <span class="mr-2 text-xl">How much do you spend?</span>
+            <p class="mt-2 space-x-1 text-center md:text-start">
+                <span class="mr-0 text-xl md:mr-2">How much do you spend?</span>
+                <br class="mb-3 md:hidden">
                 <NumberInput v-model="expenses" name="expenses" class="text-base font-light" />
                 <span class="text-base font-light">every</span>
                 <select
@@ -33,8 +35,9 @@
                 class="relative flex items-center justify-center rounded bg-white py-8 px-2 text-2xl"
                 :aria-hidden="resultHeight ? undefined : true"
             >
-                <p v-if="deadline" class="font-light">
-                    You are free until
+                <p v-if="deadline" class="text-center font-light">
+                    <span class="md:mr-1.5">You are free until</span>
+                    <br class="md:hidden">
                     <strong class="font-medium">
                         {{
                             deadline.toLocaleDateString('en-US', {
@@ -45,8 +48,10 @@
                         }}
                     </strong>
                 </p>
-                <p v-else class="font-light">
-                    You are free <strong class="font-medium">forever</strong>
+                <p v-else class="text-center font-light">
+                    <span class="md:mr-1.5">You are free</span>
+                    <br class="md:hidden">
+                    <strong class="font-medium">forever</strong>
                 </p>
                 <a
                     v-if="resultHeight"
