@@ -24,7 +24,7 @@ export default defineConfig({
                 name: 'Freedom Calculator',
                 short_name: 'Freedom Calculator',
                 description: 'What\'s your runway?',
-                theme_color: '#bae6fd',
+                theme_color: '#f5fdff',
                 icons: [
                     {
                         src: 'android-chrome-192x192.png',

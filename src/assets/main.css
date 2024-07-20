@@ -1,29 +1,44 @@
 @import 'tailwindcss';
 @import './fonts.css';
+@import './utilities.css';
 
 @theme {
     --font-family-ubuntu: 'Ubuntu Sans', sans-serif;
     --font-family-titillium: 'Titillium Web', sans-serif;
 
-    --font-size-xs: 0.875rem;
-    --font-size-xs--line-height: 1.25rem;
-    --font-size-sm: 1rem;
-    --font-size-sm--line-height: 1.5rem;
-    --font-size-base: 1.5rem;
-    --font-size-base--line-height: 2rem;
-    --font-size-xl: 4rem;
-    --font-size-xl--line-height: 1;
+    --font-size-title: 3rem;
+    --font-size-title--line-height: 1;
+    --font-size-subtitle: 1.125rem;
+    --font-size-subtitle--line-height: 1.75rem;
+    --font-size-questions: 1rem;
+    --font-size-questions--line-height: 1.5rem;
+    --font-size-answers: 0.875rem;
+    --font-size-answers--line-height: 1.25rem;
+    --font-size-result: 1.125rem;
+    --font-size-result--line-height: 1.75rem;
+    --font-size-footers: 0.75rem;
+    --font-size-footers--line-height: 1rem;
+
+    --color-primary-light: hsl(190, 95%, 98%);
+    --color-primary: hsl(190, 95%, 88%);
+    --color-primary-dark: hsl(190, 95%, 15%);
+    --color-primary-gray: hsl(190, 20%, 30%);
 }
 
-@media (width >= 50rem) {
+/* TODO @media screen(sm) in v4? */
+@media (width >= 40rem) {
     :root {
-        --font-size-xs: 1rem;
-        --font-size-xs--line-height: 1.5rem;
-        --font-size-sm: 1.25rem;
-        --font-size-sm--line-height: 1.75rem;
-        --font-size-base: 1.875rem;
-        --font-size-base--line-height: 2.25rem;
-        --font-size-xl: 6rem;
-        --font-size-xl--line-height: 1;
+        --font-size-title: 4rem;
+        --font-size-title--line-height: 1;
+        --font-size-subtitle: 1.5rem;
+        --font-size-subtitle--line-height: 2rem;
+        --font-size-questions: 1.5rem;
+        --font-size-questions--line-height: 2rem;
+        --font-size-answers: 1rem;
+        --font-size-answers--line-height: 1.5rem;
+        --font-size-result: 1.5rem;
+        --font-size-result--line-height: 2rem;
+        --font-size-footers: 0.875rem;
+        --font-size-footers--line-height: 1.25rem;
     }
 }

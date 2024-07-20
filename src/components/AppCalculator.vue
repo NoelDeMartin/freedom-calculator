@@ -1,27 +1,26 @@
 <template>
     <div
-        class="rounded-[--border-radius] bg-[#354059] p-[--border-size] shadow-2xl [--border-radius:1rem] [--border-size:.5rem]"
+        class="bg-primary-dark rounded-[--border-radius] p-[--border-size] shadow-2xl [--border-radius:1rem] [--border-size:.5rem]"
     >
-        <div class="rounded-[calc(var(--border-radius)-var(--border-size))] bg-[#e2edf0] p-1">
-            <div class="flex min-w-[80vw] flex-col space-y-2 py-12 px-2 sm:min-w-0 sm:p-6 md:p-10">
+        <div class="bg-primary rounded-[calc(var(--border-radius)-var(--border-size))] p-1">
+            <div class="flex min-w-[80vw] flex-col space-y-2 py-6 px-2 sm:min-w-0 sm:p-6 sm:p-10">
                 <p class="flex flex-col items-center space-x-2 text-center sm:flex-row sm:text-start">
-                    <span class="mr-0 text-base sm:mr-4">How much do you have?</span>
-                    <span class="mt-2 flex items-center space-x-2 sm:mt-0">
-                        <NumberInput v-model="wealth" name="wealth" class="text-sm font-light" />
-                        <span class="text-sm font-light text-gray-500">(euros, dollars, berries, etc.)</span>
+                    <span class="text-questions mr-0 sm:mr-4">How much do you have?</span>
+                    <span
+                        class="text-answers text-primary-gray mt-1 flex items-center space-x-1 font-light sm:mt-0 sm:space-x-2"
+                    >
+                        <NumberInput v-model="wealth" name="wealth" />
+                        <span>(euros, dollars, berries, etc.)</span>
                     </span>
                 </p>
-                <p class="mt-6 flex flex-col items-center space-x-2 text-center sm:mt-2 sm:flex-row sm:text-start">
-                    <span class="mr-0 text-base sm:mr-4">How much do you spend?</span>
-                    <span class="mt-2 flex items-center space-x-2 sm:mt-0">
-                        <NumberInput v-model="expenses" name="expenses" class="text-sm font-light" />
-                        <span class="text-sm font-light">every</span>
-                        <SelectInput
-                            v-model="expensesRate"
-                            name="expensesRate"
-                            class="text-sm"
-                            :options="EXPENSES_RATES"
-                        />
+                <p class="mt-4 flex flex-col items-center space-x-2 text-center sm:mt-2 sm:flex-row sm:text-start">
+                    <span class="text-questions mr-0 sm:mr-4">How much do you spend?</span>
+                    <span
+                        class="text-answers text-primary-gray mt-1 flex items-center space-x-1.5 font-light sm:mt-0 sm:space-x-2"
+                    >
+                        <NumberInput v-model="expenses" name="expenses" />
+                        <span>every</span>
+                        <SelectInput v-model="expensesRate" name="expensesRate" :options="EXPENSES_RATES" />
                     </span>
                 </p>
             </div>
@@ -33,11 +32,11 @@
             >
                 <div
                     ref="$result"
-                    class="group relative flex items-center justify-center rounded-[calc(var(--border-radius)-var(--border-size)-.25rem)] bg-white pt-4 px-2 pb-8 text-2xl has-[a:focus]:bg-sky-50 has-[a:hover]:bg-sky-50 sm:py-8"
+                    class="group has-[a:focus]:bg-primary-light has-[a:hover]:bg-primary-light relative flex items-center justify-center rounded-[calc(var(--border-radius)-var(--border-size)-.25rem)] bg-white pt-4 px-2 pb-8 text-2xl sm:py-8"
                     :aria-hidden="resultHeight ? undefined : true"
                 >
                     <p
-                        class="flex flex-col text-center font-light transition-transform motion-reduce:transition-none sm:flex-row sm:group-has-[a:focus]:scale-125 sm:group-has-[a:hover]:scale-125"
+                        class="text-result flex flex-col text-center font-light transition-transform motion-reduce:transition-none sm:flex-row sm:group-has-[a:focus]:scale-125 sm:group-has-[a:hover]:scale-125"
                     >
                         <template v-if="renderedDeadline">
                             <span class="mr-1.5">You are free until</span>
@@ -54,7 +53,7 @@
                         v-if="resultHeight"
                         :href="permalink"
                         target="_blank"
-                        class="absolute right-0.5 bottom-0.5 rounded-full py-0.5 px-1 text-xs text-gray-700 opacity-50 hover:opacity-100 focus:opacity-100 focus-visible:bg-sky-100 focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:outline-0 focus-visible:ring-inset sm:right-1 sm:bottom-1 sm:py-1 sm:px-3"
+                        class="clickable-target text-primary-gray text-footers !absolute right-0.5 bottom-0.5 rounded-full py-0.5 px-1 opacity-50 hover:opacity-100 focus:opacity-100 focus-visible:bg-sky-100 focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:outline-0 focus-visible:ring-inset sm:right-1 sm:bottom-1 sm:py-1 sm:px-3"
                     >
                         Save this result
                     </a>
