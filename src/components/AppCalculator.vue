@@ -1,9 +1,9 @@
 <template>
     <div
-        class="rounded-[--border-radius] bg-[#353535] p-[--border-size] shadow-2xl [--border-radius:1rem] [--border-size:.5rem]"
+        class="rounded-[--border-radius] bg-[#354059] p-[--border-size] shadow-2xl [--border-radius:1rem] [--border-size:.5rem]"
     >
-        <div class="rounded-[calc(var(--border-radius)-var(--border-size))] bg-gray-200 p-1">
-            <div class="flex min-w-[80vw] flex-col space-y-2 py-4 px-2 sm:min-w-0 sm:p-6 md:p-10">
+        <div class="rounded-[calc(var(--border-radius)-var(--border-size))] bg-[#e2edf0] p-1">
+            <div class="flex min-w-[80vw] flex-col space-y-2 py-12 px-2 sm:min-w-0 sm:p-6 md:p-10">
                 <p class="flex flex-col items-center space-x-2 text-center sm:flex-row sm:text-start">
                     <span class="mr-0 text-base sm:mr-4">How much do you have?</span>
                     <span class="mt-2 flex items-center space-x-2 sm:mt-0">
@@ -11,7 +11,7 @@
                         <span class="text-sm font-light text-gray-500">(euros, dollars, berries, etc.)</span>
                     </span>
                 </p>
-                <p class="mt-2 flex flex-col items-center space-x-2 text-center sm:flex-row sm:text-start">
+                <p class="mt-6 flex flex-col items-center space-x-2 text-center sm:mt-2 sm:flex-row sm:text-start">
                     <span class="mr-0 text-base sm:mr-4">How much do you spend?</span>
                     <span class="mt-2 flex items-center space-x-2 sm:mt-0">
                         <NumberInput v-model="expenses" name="expenses" class="text-sm font-light" />
@@ -37,12 +37,12 @@
                     :aria-hidden="resultHeight ? undefined : true"
                 >
                     <p
-                        class="flex flex-col text-center font-light transition-transform sm:flex-row sm:group-has-[a:focus]:scale-125 sm:group-has-[a:hover]:scale-125"
+                        class="flex flex-col text-center font-light transition-transform motion-reduce:transition-none sm:flex-row sm:group-has-[a:focus]:scale-125 sm:group-has-[a:hover]:scale-125"
                     >
-                        <template v-if="deadline">
+                        <template v-if="renderedDeadline">
                             <span class="mr-1.5">You are free until</span>
                             <strong class="font-medium">
-                                {{ deadline }}
+                                {{ renderedDeadline }}
                             </strong>
                         </template>
                         <template v-else>
@@ -65,9 +65,12 @@
 </template>
 
 <script setup lang="ts">
-import { after, getLocationQueryParameters } from '@noeldemartin/utils';
+import { after, debounce, getLocationQueryParameters } from '@noeldemartin/utils';
 import { computed, onMounted, ref, watchEffect } from 'vue';
 
+import { freedom } from '@/lib/freedom';
+
+const MONTH_TIME = 30 * 24 * 60 * 60 * 1000;
 const EXPENSES_RATES = ['month', 'week', 'day'];
 const EXPENSES_RATES_DAYS: Partial<Record<string, number>> = {
     month: 30,
@@ -77,6 +80,7 @@ const EXPENSES_RATES_DAYS: Partial<Record<string, number>> = {
 const $result = ref<HTMLElement>();
 const ready = ref(false);
 const initialized = ref(false);
+const initialize = debounce(() => (initialized.value = true), 600);
 const wealth = ref(0);
 const expenses = ref(0);
 const expensesRate = ref(EXPENSES_RATES[0]);
@@ -90,14 +94,14 @@ const deadline = computed(() => {
 
     const date = new Date(new Date().getTime() + 24 * 60 * 60 * 1000 * daysLeft);
 
-    return isNaN(date.getTime())
-        ? null
-        : date.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-        });
+    return isNaN(date.getTime()) ? null : date;
 });
+const renderedDeadline = computed(() =>
+    deadline.value?.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    }));
 const resultHeight = computed(() => {
     if (!initialized.value || !$result.value) {
         return 0;
@@ -120,7 +124,25 @@ watchEffect(() => {
         return;
     }
 
-    initialized.value = true;
+    initialize();
+});
+
+watchEffect(() => {
+    if (!initialized.value) {
+        return;
+    }
+
+    const runway = (deadline.value?.getTime() ?? Infinity) - Date.now();
+
+    if (runway < MONTH_TIME) {
+        freedom.value = 'broke';
+    } else if (runway < MONTH_TIME * 12) {
+        freedom.value = 'free';
+    } else if (runway < MONTH_TIME * 12 * 100) {
+        freedom.value = 'rich';
+    } else {
+        freedom.value = 'millionaire';
+    }
 });
 
 onMounted(async () => {

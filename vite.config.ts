@@ -1,6 +1,8 @@
 import { URL, fileURLToPath } from 'node:url';
 
 import Components from 'unplugin-vue-components/vite';
+import Icons from 'unplugin-icons/vite';
+import IconsResolver from 'unplugin-icons/resolver';
 import TailwindCSS from '@tailwindcss/vite';
 import Vue from '@vitejs/plugin-vue';
 import { defineConfig } from 'vite';
@@ -10,7 +12,12 @@ export default defineConfig({
     plugins: [
         Vue(),
         TailwindCSS(),
-        Components({ dts: false }),
+        Components({ dts: false, resolvers: [IconsResolver()] }),
+        Icons({
+            iconCustomizer(_, __, props) {
+                props['aria-hidden'] = 'true';
+            },
+        }),
         VitePWA({
             registerType: 'autoUpdate',
             manifest: {
