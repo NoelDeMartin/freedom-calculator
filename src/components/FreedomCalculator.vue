@@ -25,15 +25,14 @@
                 </p>
             </div>
             <div
-                class="overflow-hidden motion-reduce:transition-none"
-                :style="`height: ${resultHeight}px`"
-                :class="{ 'transition-[height]': ready }"
+                class="overflow-hidden will-change-[height] motion-reduce:transition-none"
+                :class="{ 'transition-[height]': ready, 'h-0': !showResult, 'h-24': showResult }"
                 aria-live="polite"
             >
                 <div
                     ref="$result"
-                    class="group has-[a:focus]:bg-primary-light has-[a:hover]:bg-primary-light relative flex items-center justify-center rounded-[calc(var(--border-radius)-var(--border-size)-.25rem)] bg-white pt-4 px-2 pb-8 text-2xl sm:py-8"
-                    :aria-hidden="resultHeight ? undefined : true"
+                    class="group has-[a:focus]:bg-primary-light has-[a:hover]:bg-primary-light relative flex h-24 items-center justify-center rounded-[calc(var(--border-radius)-var(--border-size)-.25rem)] bg-white p-2 text-2xl sm:py-8"
+                    :aria-hidden="showResult ? undefined : true"
                 >
                     <p
                         class="text-result flex flex-col text-center font-light transition-transform motion-reduce:transition-none sm:flex-row sm:group-has-[a:focus]:scale-125 sm:group-has-[a:hover]:scale-125"
@@ -53,7 +52,7 @@
                         </template>
                     </p>
                     <a
-                        v-if="resultHeight"
+                        v-if="showResult"
                         :href="permalink"
                         target="_blank"
                         class="clickable-target text-primary-gray text-footers !absolute right-0.5 bottom-0.5 rounded-full py-0.5 px-1 opacity-50 hover:opacity-100 focus:opacity-100 focus-visible:bg-sky-100 focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:outline-0 focus-visible:ring-inset sm:right-1 sm:bottom-1 sm:py-1 sm:px-3"
@@ -105,13 +104,7 @@ const renderedDeadline = computed(() =>
         month: 'long',
         day: 'numeric',
     }));
-const resultHeight = computed(() => {
-    if (!initialized.value || !$result.value) {
-        return 0;
-    }
-
-    return $result.value.clientHeight;
-});
+const showResult = computed(() => initialized.value && !!$result.value);
 const permalink = computed(() => {
     const url = new URL(location.href);
 
