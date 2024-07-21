@@ -67,9 +67,9 @@
 import { after, debounce, getLocationQueryParameters } from '@noeldemartin/utils';
 import { computed, onMounted, ref, watchEffect } from 'vue';
 
-import { freedom } from '@/lib/freedom';
+import { DAY_TIME } from '@/lib/time';
+import { updateFreedom } from '@/lib/freedom';
 
-const MONTH_TIME = 30 * 24 * 60 * 60 * 1000;
 const EXPENSES_RATES = ['month', 'week', 'day'];
 const EXPENSES_RATES_DAYS: Partial<Record<string, number>> = {
     month: 30,
@@ -91,7 +91,7 @@ const deadline = computed(() => {
         return;
     }
 
-    const date = new Date(new Date().getTime() + 24 * 60 * 60 * 1000 * daysLeft);
+    const date = new Date(Date.now() + DAY_TIME * daysLeft);
 
     return isNaN(date.getTime()) ? null : date;
 });
@@ -131,17 +131,7 @@ watchEffect(() => {
         return;
     }
 
-    const runway = (deadline.value?.getTime() ?? Infinity) - Date.now();
-
-    if (runway < MONTH_TIME) {
-        freedom.value = 'broke';
-    } else if (runway < MONTH_TIME * 12) {
-        freedom.value = 'free';
-    } else if (runway < MONTH_TIME * 12 * 100) {
-        freedom.value = 'rich';
-    } else {
-        freedom.value = 'millionaire';
-    }
+    updateFreedom((deadline.value?.getTime() ?? Infinity) - Date.now());
 });
 
 onMounted(async () => {
