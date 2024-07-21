@@ -38,7 +38,10 @@
                     <p
                         class="text-result flex flex-col text-center font-light transition-transform motion-reduce:transition-none sm:flex-row sm:group-has-[a:focus]:scale-125 sm:group-has-[a:hover]:scale-125"
                     >
-                        <template v-if="renderedDeadline">
+                        <template v-if="runway < DAY_TIME">
+                            Sorry, you are broke
+                        </template>
+                        <template v-else-if="renderedDeadline">
                             <span class="mr-1.5">You are free until</span>
                             <strong class="font-medium">
                                 {{ renderedDeadline }}
@@ -68,7 +71,7 @@ import { after, debounce, getLocationQueryParameters } from '@noeldemartin/utils
 import { computed, onMounted, ref, watchEffect } from 'vue';
 
 import { DAY_TIME } from '@/lib/time';
-import { updateFreedom } from '@/lib/freedom';
+import { freedom, updateFreedom } from '@/lib/freedom';
 
 const EXPENSES_RATES = ['month', 'week', 'day'];
 const EXPENSES_RATES_DAYS: Partial<Record<string, number>> = {
@@ -95,6 +98,7 @@ const deadline = computed(() => {
 
     return isNaN(date.getTime()) ? null : date;
 });
+const runway = computed(() => (deadline.value?.getTime() ?? Infinity) - Date.now());
 const renderedDeadline = computed(() =>
     deadline.value?.toLocaleDateString('en-US', {
         year: 'numeric',
@@ -131,7 +135,7 @@ watchEffect(() => {
         return;
     }
 
-    updateFreedom((deadline.value?.getTime() ?? Infinity) - Date.now());
+    updateFreedom(runway.value);
 });
 
 onMounted(async () => {
