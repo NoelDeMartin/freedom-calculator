@@ -71,7 +71,7 @@ import { after, debounce, getLocationQueryParameters } from '@noeldemartin/utils
 import { computed, onMounted, ref, watchEffect } from 'vue';
 
 import { DAY_TIME } from '@/lib/time';
-import { freedom, updateFreedom } from '@/lib/freedom';
+import { updateFreedom } from '@/lib/freedom';
 
 const EXPENSES_RATES = ['month', 'week', 'day'];
 const EXPENSES_RATES_DAYS: Partial<Record<string, number>> = {
