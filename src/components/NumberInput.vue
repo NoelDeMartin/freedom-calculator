@@ -38,6 +38,12 @@ function update(event: Event) {
         return;
     }
 
+    if (rawValue.value === '0') {
+        updateValue($input.valueAsNumber.toString(), $input.valueAsNumber);
+
+        return;
+    }
+
     updateValue($input.value, $input.valueAsNumber);
 }
 
