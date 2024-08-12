@@ -26,36 +26,59 @@
             </div>
             <div
                 class="overflow-hidden will-change-[height] motion-reduce:transition-none"
-                :class="{ 'transition-[height]': ready, 'h-0': !showResult, 'h-24': showResult }"
+                :class="{
+                    'transition-[height]': ready,
+                    'h-0': !showResult,
+                    'h-24': showResult && !showFIRE,
+                    'h-32': showResult && showFIRE,
+                }"
                 aria-live="polite"
             >
                 <div
                     ref="$result"
-                    class="group has-[a:focus]:bg-primary-light has-[a:hover]:bg-primary-light relative flex h-24 items-center justify-center rounded-[calc(var(--border-radius)-var(--border-size)-.25rem)] bg-white p-2 text-2xl sm:py-8"
+                    class="group has-[#save-result:focus]:bg-primary-light has-[#save-result:hover]:bg-primary-light relative flex items-center justify-center rounded-[calc(var(--border-radius)-var(--border-size)-.25rem)] bg-white p-2 text-2xl sm:py-8"
+                    :class="{
+                        'h-24': !showFIRE,
+                        'h-32': showFIRE,
+                    }"
                     :aria-hidden="showResult ? undefined : true"
                 >
-                    <p
-                        class="text-result flex flex-col text-center font-light transition-transform motion-reduce:transition-none sm:flex-row sm:group-has-[a:focus]:scale-125 sm:group-has-[a:hover]:scale-125"
-                    >
-                        <template v-if="runway < DAY_TIME">
-                            Sorry, you are broke
-                        </template>
-                        <template v-else-if="renderedDeadline">
-                            <span class="mr-1.5">You are free until</span>
-                            <strong class="font-medium">
-                                {{ renderedDeadline }}
-                            </strong>
-                        </template>
-                        <template v-else>
-                            <span class="mr-1.5">You are free</span>
-                            <strong class="font-medium">forever</strong>
-                        </template>
-                    </p>
+                    <div class="text-center">
+                        <p
+                            class="text-result flex flex-col text-center font-light transition-transform motion-reduce:transition-none sm:flex-row sm:group-has-[#save-result:focus]:scale-125 sm:group-has-[#save-result:hover]:scale-125"
+                        >
+                            <template v-if="runway < DAY_TIME">
+                                Sorry, you are broke
+                            </template>
+                            <template v-else-if="renderedDeadline">
+                                <span class="mr-1.5">You are free until</span>
+                                <strong class="font-medium">
+                                    {{ renderedDeadline }}
+                                </strong>
+                            </template>
+                            <template v-else>
+                                <span class="mr-1.5">You are free</span>
+                                <strong class="font-medium">forever</strong>
+                            </template>
+                        </p>
+                        <p
+                            v-if="showFIRE"
+                            class="text-fire text-primary-gray mt-0.5 opacity-50 focus-within:opacity-100 has-[a:hover]:opacity-100"
+                        >
+                            (or
+                            <a
+                                href="https://en.wikipedia.org/wiki/FIRE_movement"
+                                target="_blank"
+                                class="clickable-target underline hover:text-sky-900 focus-visible:bg-sky-100 focus-visible:text-sky-900 focus-visible:decoration-sky-400 focus-visible:decoration-2 focus-visible:outline-0"
+                            >maybe forever</a>)
+                        </p>
+                    </div>
                     <a
                         v-if="showResult"
+                        id="save-result"
                         :href="permalink"
                         target="_blank"
-                        class="clickable-target text-primary-gray text-footers !absolute right-0.5 bottom-0.5 rounded-full py-0.5 px-1 opacity-50 hover:opacity-100 focus:opacity-100 focus-visible:bg-sky-100 focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:outline-0 focus-visible:ring-inset sm:right-1 sm:bottom-1 sm:py-1 sm:px-3"
+                        class="clickable-target text-primary-gray text-footers !absolute right-1.5 bottom-1.5 rounded-full opacity-50 hover:opacity-100 focus:opacity-100 focus-visible:bg-sky-100 focus-visible:underline focus-visible:decoration-sky-400 focus-visible:decoration-2 focus-visible:outline-0 sm:right-3 sm:bottom-2"
                     >
                         Save this result
                     </a>
@@ -69,7 +92,7 @@
 import { after, debounce, getLocationQueryParameters } from '@noeldemartin/utils';
 import { computed, onMounted, ref, watchEffect } from 'vue';
 
-import { DAY_TIME } from '@/lib/time';
+import { DAY_TIME, FIRE_TIME } from '@/lib/time';
 import { updateFreedom } from '@/lib/freedom';
 
 const EXPENSES_RATES = ['month', 'week', 'day'];
@@ -105,6 +128,7 @@ const renderedDeadline = computed(() =>
         day: 'numeric',
     }));
 const showResult = computed(() => initialized.value && !!$result.value);
+const showFIRE = computed(() => runway.value > FIRE_TIME && !!renderedDeadline.value);
 const permalink = computed(() => {
     const url = new URL(location.href);
 

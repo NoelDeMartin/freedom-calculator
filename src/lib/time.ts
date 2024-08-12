@@ -8,4 +8,4 @@ export const MILLIONAIRE_TIME = 100 * YEAR_TIME;
 // translates to having savings for 26 years of expenses.
 //
 // See https://en.wikipedia.org/wiki/FIRE_movement
-export const FIRE_TIME = 26 * YEAR_TIME;
+export const FIRE_TIME = 25 * YEAR_TIME;
