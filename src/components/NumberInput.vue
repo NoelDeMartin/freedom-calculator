@@ -4,8 +4,10 @@
         <input
             :value="rawValue"
             :name
-            type="number"
+            type="text"
+            inputmode="numeric"
             class="absolute inset-0 rounded-full border-0 bg-white text-center focus:bg-sky-50 focus:ring-2 focus:ring-sky-400 focus:outline-0 focus:ring-inset"
+            @keypress="filterNumeric"
             @input="update"
         >
     </div>
@@ -27,30 +29,43 @@ const props = defineProps({
 });
 
 let emittingUpdate = false;
+const numberRegEx = /\d/;
+const notNumberRegEx = /[^0-9]/g;
+const numberFormat = new Intl.NumberFormat();
 const rawValue = ref(props.modelValue.toString());
+
+function filterNumeric(event: KeyboardEvent) {
+    if (numberRegEx.test(event.key)) {
+        return;
+    }
+
+    event.preventDefault();
+}
 
 function update(event: Event) {
     const $input = event.target as HTMLInputElement;
+    const valueAsString = $input.value.replace(notNumberRegEx, '');
+    const valueAsNumber = parseInt(valueAsString);
 
-    if (isNaN($input.valueAsNumber)) {
+    if (isNaN(valueAsNumber)) {
         updateValue('0', 0);
 
         return;
     }
 
-    if (rawValue.value === '0') {
-        updateValue($input.valueAsNumber.toString(), $input.valueAsNumber);
+    if (valueAsString.startsWith('0') && valueAsString.length > 2) {
+        updateValue(numberFormat.format(parseInt(`1${valueAsString}`)).slice(1), valueAsNumber);
 
         return;
     }
 
-    updateValue($input.value, $input.valueAsNumber);
+    updateValue(numberFormat.format(valueAsNumber), valueAsNumber);
 }
 
-function updateValue(raw: string, asNumber: number): void {
+function updateValue(asString: string, asNumber: number): void {
     emittingUpdate = true;
 
-    rawValue.value = raw;
+    rawValue.value = asString;
     emit('update:modelValue', asNumber);
 
     nextTick(() => (emittingUpdate = false));
@@ -61,17 +76,6 @@ watchEffect(() => {
         return;
     }
 
-    rawValue.value = props.modelValue.toString();
+    rawValue.value = numberFormat.format(props.modelValue);
 });
 </script>
-
-<style>
-input[type='number'] {
-    appearance: textfield;
-}
-
-input[type='number']::-webkit-outer-spin-button,
-input[type='number']::-webkit-inner-spin-button {
-    appearance: none;
-}
-</style>
