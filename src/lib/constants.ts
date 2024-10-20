@@ -9,3 +9,6 @@ export const MILLIONAIRE_TIME = 100 * YEAR_TIME;
 //
 // See https://en.wikipedia.org/wiki/FIRE_movement
 export const FIRE_TIME = 25 * YEAR_TIME;
+
+// See https://mkorostoff.github.io/1-pixel-wealth/
+export const JEFF_WEALTH = 185000000000;

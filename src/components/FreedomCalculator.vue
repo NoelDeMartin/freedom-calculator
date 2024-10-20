@@ -62,7 +62,7 @@
                             </template>
                         </p>
                         <p
-                            v-if="showJeff"
+                            v-if="showWealthToScale"
                             class="text-fire text-primary-gray mt-0.5 opacity-50 focus-within:opacity-100 has-[a:hover]:opacity-100"
                         >
                             (congrats on saving so much, but
@@ -103,7 +103,7 @@
 import { after, debounce, getLocationQueryParameters } from '@noeldemartin/utils';
 import { computed, onMounted, ref, watchEffect } from 'vue';
 
-import { DAY_TIME, FIRE_TIME, MILLIONAIRE_TIME } from '@/lib/time';
+import { DAY_TIME, FIRE_TIME, JEFF_WEALTH, MILLIONAIRE_TIME } from '@/lib/constants';
 import { updateFreedom } from '@/lib/freedom';
 
 const EXPENSES_RATES = ['month', 'week', 'day'];
@@ -139,8 +139,10 @@ const renderedDeadline = computed(() =>
         day: 'numeric',
     }));
 const showResult = computed(() => initialized.value && !!$result.value);
-const showFIRE = computed(() => runway.value > FIRE_TIME && !!renderedDeadline.value);
-const showJeff = computed(() => runway.value > MILLIONAIRE_TIME && !!renderedDeadline.value);
+const showFIRE = computed(() => wealth.value < JEFF_WEALTH && runway.value > FIRE_TIME && !!renderedDeadline.value);
+const showWealthToScale = computed(
+    () => wealth.value < JEFF_WEALTH && runway.value > MILLIONAIRE_TIME && !!renderedDeadline.value,
+);
 const permalink = computed(() => {
     const url = new URL(location.href);
 

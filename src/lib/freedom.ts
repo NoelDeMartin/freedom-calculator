@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 
-import { FIRE_TIME, MILLIONAIRE_TIME, MONTH_TIME } from '@/lib/time';
+import { FIRE_TIME, MILLIONAIRE_TIME, MONTH_TIME } from '@/lib/constants';
 
 function calculateFreedom(runway: number): Freedom {
     if (runway < MONTH_TIME) {
