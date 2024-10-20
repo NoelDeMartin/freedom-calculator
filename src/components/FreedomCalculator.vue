@@ -45,7 +45,7 @@
                 >
                     <div class="text-center">
                         <p
-                            class="text-result flex flex-col text-center font-light transition-transform motion-reduce:transition-none sm:flex-row sm:group-has-[#save-result:focus]:scale-125 sm:group-has-[#save-result:hover]:scale-125"
+                            class="text-result flex flex-col text-center font-light transition-transform motion-reduce:transition-none sm:flex-row sm:justify-center sm:group-has-[#save-result:focus]:scale-125 sm:group-has-[#save-result:hover]:scale-125"
                         >
                             <template v-if="runway < DAY_TIME">
                                 Sorry, you are broke
@@ -62,7 +62,18 @@
                             </template>
                         </p>
                         <p
-                            v-if="showFIRE"
+                            v-if="showJeff"
+                            class="text-fire text-primary-gray mt-0.5 opacity-50 focus-within:opacity-100 has-[a:hover]:opacity-100"
+                        >
+                            (congrats on saving so much, but
+                            <a
+                                href="https://mkorostoff.github.io/1-pixel-wealth/"
+                                target="_blank"
+                                class="clickable-target underline hover:text-sky-900 focus-visible:bg-sky-100 focus-visible:text-sky-900 focus-visible:decoration-sky-400 focus-visible:decoration-2 focus-visible:outline-0"
+                            >you've still got a long way to go</a>)
+                        </p>
+                        <p
+                            v-else-if="showFIRE"
                             class="text-fire text-primary-gray mt-0.5 opacity-50 focus-within:opacity-100 has-[a:hover]:opacity-100"
                         >
                             (or
@@ -92,7 +103,7 @@
 import { after, debounce, getLocationQueryParameters } from '@noeldemartin/utils';
 import { computed, onMounted, ref, watchEffect } from 'vue';
 
-import { DAY_TIME, FIRE_TIME } from '@/lib/time';
+import { DAY_TIME, FIRE_TIME, MILLIONAIRE_TIME } from '@/lib/time';
 import { updateFreedom } from '@/lib/freedom';
 
 const EXPENSES_RATES = ['month', 'week', 'day'];
@@ -129,6 +140,7 @@ const renderedDeadline = computed(() =>
     }));
 const showResult = computed(() => initialized.value && !!$result.value);
 const showFIRE = computed(() => runway.value > FIRE_TIME && !!renderedDeadline.value);
+const showJeff = computed(() => runway.value > MILLIONAIRE_TIME && !!renderedDeadline.value);
 const permalink = computed(() => {
     const url = new URL(location.href);
 
