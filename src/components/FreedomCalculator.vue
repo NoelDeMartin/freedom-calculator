@@ -10,7 +10,7 @@
                         class="text-answers text-primary-gray mt-1 flex items-center space-x-1 font-light sm:mt-0 sm:space-x-2"
                     >
                         <NumberInput v-model="wealth" name="wealth" />
-                        <span>(euros, dollars, berries, etc.)</span>
+                        <span class="text-balance">(euros, dollars, berries, etc.)</span>
                     </span>
                 </p>
                 <p class="mt-4 flex flex-col items-center space-x-2 text-center sm:mt-2 sm:flex-row sm:text-start">
