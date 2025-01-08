@@ -20,6 +20,7 @@
         "@iconify/json": "^2.2.229",
         "@noeldemartin/eslint-config-vue": "^0.1.2",
         "@noeldemartin/scripts": "^0.2.1",
+        "@playwright/test": "^1.49.1",
         "@tailwindcss/vite": "^4.0.0-alpha.17",
         "@tsconfig/node20": "^20.1.4",
         "@types/node": "^20.14.5",

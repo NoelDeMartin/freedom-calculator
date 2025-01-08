@@ -5,30 +5,30 @@
         <div class="bg-primary rounded-[calc(var(--border-radius)-var(--border-size))] p-1">
             <div class="flex min-w-[80vw] flex-col space-y-2 py-6 px-2 sm:min-w-0 sm:p-6 sm:p-10">
                 <p class="flex flex-col items-center space-x-2 text-center sm:flex-row sm:text-start">
-                    <span class="text-questions mr-0 sm:mr-4">How much do you have?</span>
+                    <label for="wealth" class="text-questions mr-0 sm:mr-4">How much do you have?</label>
                     <span
                         class="text-answers text-primary-gray mt-1 flex items-center space-x-1 font-light sm:mt-0 sm:space-x-2"
                     >
-                        <NumberInput v-model="wealth" name="wealth" />
+                        <NumberInput id="wealth" v-model="wealth" name="wealth" />
                         <span class="text-balance">(euros, dollars, berries, etc.)</span>
                     </span>
                 </p>
                 <p class="mt-4 flex flex-col items-center space-x-2 text-center sm:mt-2 sm:flex-row sm:text-start">
-                    <span class="text-questions mr-0 sm:mr-4">How much do you spend?</span>
+                    <label for="expenses" class="text-questions mr-0 sm:mr-4">How much do you spend?</label>
                     <span
                         class="text-answers text-primary-gray mt-1 flex items-center space-x-1.5 font-light sm:mt-0 sm:space-x-2"
                     >
-                        <NumberInput v-model="expenses" name="expenses" />
+                        <NumberInput id="expenses" v-model="expenses" name="expenses" />
                         <span>every</span>
                         <SelectInput v-model="expensesRate" name="expensesRate" :options="RATES" />
                     </span>
                 </p>
                 <p class="mt-4 flex flex-col items-center space-x-2 text-center sm:mt-2 sm:flex-row sm:text-start">
-                    <span class="text-questions mr-0 sm:mr-4">How much do you earn?</span>
+                    <label for="income" class="text-questions mr-0 sm:mr-4">How much do you earn?</label>
                     <span
                         class="text-answers text-primary-gray mt-1 flex items-center space-x-1.5 font-light sm:mt-0 sm:space-x-2"
                     >
-                        <NumberInput v-model="income" name="income" />
+                        <NumberInput id="income" v-model="income" name="income" />
                         <span>every</span>
                         <SelectInput v-model="incomeRate" name="incomeRate" :options="RATES" />
                     </span>
@@ -58,7 +58,7 @@
                             class="text-result flex flex-col text-center font-light transition-transform motion-reduce:transition-none sm:flex-row sm:justify-center"
                         >
                             <template v-if="timeLeft < DAY_TIME">
-                                <span v-if="earning">Congratulations, you can retire!</span>
+                                <span v-if="earning">Congratulations, you can retire <strong class="font-medium">today</strong>!</span>
                                 <span v-else>Sorry, you are broke</span>
                             </template>
                             <template v-else-if="renderedDeadline">

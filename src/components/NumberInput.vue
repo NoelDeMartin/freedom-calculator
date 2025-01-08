@@ -2,6 +2,7 @@
     <div class="relative inline-block h-8 min-w-8 pr-3 pl-2 sm:h-12 sm:min-w-12 sm:pr-4 sm:pl-3">
         <span class="invisible" aria-hidden="true">{{ rawValue }}</span>
         <input
+            :id
             :value="rawValue"
             :name
             type="text"
@@ -19,6 +20,10 @@ import { nextTick, ref, watchEffect } from 'vue';
 const emit = defineEmits(['update:modelValue']);
 const props = defineProps({
     name: {
+        type: String,
+        default: null,
+    },
+    id: {
         type: String,
         default: null,
     },
