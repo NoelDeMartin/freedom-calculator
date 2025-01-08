@@ -20,7 +20,17 @@
                     >
                         <NumberInput v-model="expenses" name="expenses" />
                         <span>every</span>
-                        <SelectInput v-model="expensesRate" name="expensesRate" :options="EXPENSES_RATES" />
+                        <SelectInput v-model="expensesRate" name="expensesRate" :options="RATES" />
+                    </span>
+                </p>
+                <p class="mt-4 flex flex-col items-center space-x-2 text-center sm:mt-2 sm:flex-row sm:text-start">
+                    <span class="text-questions mr-0 sm:mr-4">How much do you earn?</span>
+                    <span
+                        class="text-answers text-primary-gray mt-1 flex items-center space-x-1.5 font-light sm:mt-0 sm:space-x-2"
+                    >
+                        <NumberInput v-model="income" name="income" />
+                        <span>every</span>
+                        <SelectInput v-model="incomeRate" name="incomeRate" :options="RATES" />
                     </span>
                 </p>
             </div>
@@ -36,7 +46,7 @@
             >
                 <div
                     ref="$result"
-                    class="group has-[#save-result:focus]:bg-primary-light has-[#save-result:hover]:bg-primary-light relative flex items-center justify-center rounded-[calc(var(--border-radius)-var(--border-size)-.25rem)] bg-white p-2 text-2xl sm:py-8"
+                    class="group relative flex items-center justify-center rounded-[calc(var(--border-radius)-var(--border-size)-.25rem)] bg-white p-2 text-2xl sm:py-8"
                     :class="{
                         'h-24': !showFIRE,
                         'h-32': showFIRE,
@@ -45,13 +55,15 @@
                 >
                     <div class="text-center">
                         <p
-                            class="text-result flex flex-col text-center font-light transition-transform motion-reduce:transition-none sm:flex-row sm:justify-center sm:group-has-[#save-result:focus]:scale-125 sm:group-has-[#save-result:hover]:scale-125"
+                            class="text-result flex flex-col text-center font-light transition-transform motion-reduce:transition-none sm:flex-row sm:justify-center"
                         >
-                            <template v-if="runway < DAY_TIME">
-                                Sorry, you are broke
+                            <template v-if="timeLeft < DAY_TIME">
+                                <span v-if="earning">Congratulations, you can retire!</span>
+                                <span v-else>Sorry, you are broke</span>
                             </template>
                             <template v-else-if="renderedDeadline">
-                                <span class="mr-1.5">You are free until</span>
+                                <span v-if="earning" class="mr-1.5">You can retire on</span>
+                                <span v-else class="mr-1.5">You are free until</span>
                                 <strong class="font-medium">
                                     {{ renderedDeadline }}
                                 </strong>
@@ -76,23 +88,23 @@
                             v-else-if="showFIRE"
                             class="text-fire text-primary-gray mt-0.5 opacity-50 focus-within:opacity-100 has-[a:hover]:opacity-100"
                         >
-                            (or
-                            <a
-                                href="https://en.wikipedia.org/wiki/FIRE_movement"
-                                target="_blank"
-                                class="clickable-target underline hover:text-sky-900 focus-visible:bg-sky-100 focus-visible:text-sky-900 focus-visible:decoration-sky-400 focus-visible:decoration-2 focus-visible:outline-0"
-                            >maybe forever</a>)
+                            <span v-if="earning">
+                                <a
+                                    href="https://en.wikipedia.org/wiki/FIRE_movement"
+                                    target="_blank"
+                                    class="clickable-target underline hover:text-sky-900 focus-visible:bg-sky-100 focus-visible:text-sky-900 focus-visible:decoration-sky-400 focus-visible:decoration-2 focus-visible:outline-0"
+                                >learn how</a>
+                            </span>
+                            <span v-else>
+                                (or
+                                <a
+                                    href="https://en.wikipedia.org/wiki/FIRE_movement"
+                                    target="_blank"
+                                    class="clickable-target underline hover:text-sky-900 focus-visible:bg-sky-100 focus-visible:text-sky-900 focus-visible:decoration-sky-400 focus-visible:decoration-2 focus-visible:outline-0"
+                                >maybe forever</a>)
+                            </span>
                         </p>
                     </div>
-                    <a
-                        v-if="showResult"
-                        id="save-result"
-                        :href="permalink"
-                        target="_blank"
-                        class="clickable-target text-primary-gray text-footers !absolute right-1.5 bottom-1.5 rounded-full opacity-50 hover:opacity-100 focus:opacity-100 focus-visible:bg-sky-100 focus-visible:underline focus-visible:decoration-sky-400 focus-visible:decoration-2 focus-visible:outline-0 sm:right-3 sm:bottom-2"
-                    >
-                        Save this result
-                    </a>
                 </div>
             </div>
         </div>
@@ -106,8 +118,8 @@ import { computed, onMounted, ref, watchEffect } from 'vue';
 import { DAY_TIME, FIRE_TIME, JEFF_WEALTH, MILLIONAIRE_TIME } from '@/lib/constants';
 import { updateFreedom } from '@/lib/freedom';
 
-const EXPENSES_RATES = ['month', 'week', 'day'];
-const EXPENSES_RATES_DAYS: Partial<Record<string, number>> = {
+const RATES = ['month', 'week', 'day'];
+const RATES_DAYS: Partial<Record<string, number>> = {
     month: 30,
     week: 7,
 };
@@ -118,10 +130,20 @@ const initialized = ref(false);
 const initialize = debounce(() => (initialized.value = true), 600);
 const wealth = ref(0);
 const expenses = ref(0);
-const expensesRate = ref(EXPENSES_RATES[0]);
+const income = ref(0);
+const expensesRate = ref(RATES[0]);
+const incomeRate = ref(RATES[0]);
+const dailyBurn = computed(() => expenses.value / (RATES_DAYS[expensesRate.value] ?? 1));
+const dailyGain = computed(() => income.value / (RATES_DAYS[incomeRate.value] ?? 1));
+const dailyBalance = computed(() => dailyGain.value - dailyBurn.value);
+const earning = computed(() => dailyBalance.value > 0);
 const deadline = computed(() => {
-    const dailyBurn = expenses.value / (EXPENSES_RATES_DAYS[expensesRate.value] ?? 1);
-    const daysLeft = wealth.value / dailyBurn;
+    // TODO keep into account savings
+    // TODO daily balance === 0
+    const daysLeft = earning.value
+        ? (FIRE_TIME - (wealth.value * DAY_TIME) / dailyBurn.value) /
+          ((dailyBalance.value / dailyBurn.value) * DAY_TIME)
+        : wealth.value / -dailyBalance.value;
 
     if (isNaN(daysLeft) || daysLeft === Infinity) {
         return;
@@ -131,7 +153,7 @@ const deadline = computed(() => {
 
     return isNaN(date.getTime()) ? null : date;
 });
-const runway = computed(() => (deadline.value?.getTime() ?? Infinity) - Date.now());
+const timeLeft = computed(() => (deadline.value?.getTime() ?? Infinity) - Date.now());
 const renderedDeadline = computed(() =>
     deadline.value?.toLocaleDateString('en-US', {
         year: 'numeric',
@@ -139,22 +161,15 @@ const renderedDeadline = computed(() =>
         day: 'numeric',
     }));
 const showResult = computed(() => initialized.value && !!$result.value);
-const showFIRE = computed(() => wealth.value < JEFF_WEALTH && runway.value > FIRE_TIME && !!renderedDeadline.value);
-const showWealthToScale = computed(
-    () => wealth.value < JEFF_WEALTH && runway.value > MILLIONAIRE_TIME && !!renderedDeadline.value,
+const showFIRE = computed(
+    () => earning.value || (wealth.value < JEFF_WEALTH && timeLeft.value > FIRE_TIME && !!renderedDeadline.value),
 );
-const permalink = computed(() => {
-    const url = new URL(location.href);
-
-    url.searchParams.set('wealth', wealth.value.toString());
-    url.searchParams.set('expenses', expenses.value.toString());
-    url.searchParams.set('expenses-rate', expensesRate.value);
-
-    return url.href;
-});
+const showWealthToScale = computed(
+    () => wealth.value < JEFF_WEALTH && timeLeft.value > MILLIONAIRE_TIME && !!renderedDeadline.value,
+);
 
 watchEffect(() => {
-    if (initialized.value || wealth.value === 0 || expenses.value === 0) {
+    if (initialized.value || (wealth.value === 0 && income.value === 0) || expenses.value === 0) {
         return;
     }
 
@@ -166,7 +181,7 @@ watchEffect(() => {
         return;
     }
 
-    updateFreedom(runway.value);
+    updateFreedom(timeLeft.value, earning.value);
 });
 
 onMounted(async () => {
@@ -175,7 +190,7 @@ onMounted(async () => {
     wealth.value = parseInt(params.wealth ?? wealth.value.toString());
     expenses.value = parseInt(params.expenses ?? expenses.value.toString());
     expensesRate.value = params['expenses-rate'] ?? expensesRate.value;
-    initialized.value = 'wealth' in params && 'expenses' in params;
+    initialized.value = 'expenses' in params && ('wealth' in params || 'income' in params);
 
     // Wait for result to render without height transition.
     await after({ seconds: 1 });

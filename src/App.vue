@@ -7,7 +7,7 @@
                 Freedom Calculator
             </h1>
             <p class="text-primary-gray text-subtitle mt-4 text-balance text-center font-light italic">
-                What's your runway? If your income drops to 0 right now, how long will your savings last?
+                What's your runway? How long until retirement? Are you broke? Or rich?
             </p>
             <FreedomCalculator class="mt-8" />
         </main>
