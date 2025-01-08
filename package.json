@@ -7,7 +7,8 @@
         "build": "vite build",
         "deploy": "noeldemartin-deploy-app noeldemartin/freedom-calculator freedom-calculator.noeldemartin.com",
         "dev": "vite",
-        "lint": "noeldemartin-lint src"
+        "lint": "noeldemartin-lint src",
+        "test": "playwright test"
     },
     "dependencies": {
         "@noeldemartin/utils": "^0.5.1-next.369ec16c5fa546a6a2e7512501add6b0e5b1a3ac",
