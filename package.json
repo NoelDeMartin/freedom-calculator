@@ -7,10 +7,11 @@
         "build": "vite build",
         "dev": "vite",
         "lint": "noeldemartin-lint src",
-        "test": "playwright test"
+        "test": "playwright test",
+        "test-with-snapshots": "docker run --workdir /app/ --rm -v ./:/app mcr.microsoft.com/playwright:v1.49.1 npx playwright test"
     },
     "dependencies": {
-        "@noeldemartin/utils": "^0.5.1-next.369ec16c5fa546a6a2e7512501add6b0e5b1a3ac",
+        "@noeldemartin/utils": "0.7.0-next.e2b7d04f2e0025eed8f9c1942b47c3506cafde33",
         "tailwindcss": "^4.0.0-alpha.17",
         "unplugin-icons": "^0.19.0",
         "vite-plugin-pwa": "^0.20.0",
