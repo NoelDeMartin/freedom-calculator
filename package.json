@@ -5,7 +5,6 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "deploy": "noeldemartin-deploy-app noeldemartin/freedom-calculator freedom-calculator.noeldemartin.com",
         "dev": "vite",
         "lint": "noeldemartin-lint src",
         "test": "playwright test"
@@ -20,7 +19,7 @@
     "devDependencies": {
         "@iconify/json": "^2.2.229",
         "@noeldemartin/eslint-config-vue": "^0.1.2",
-        "@noeldemartin/scripts": "^0.2.1",
+        "@noeldemartin/scripts": "0.3.0-next.f891bcbf278e01c7429bb641d0df38556b4ac151",
         "@playwright/test": "^1.49.1",
         "@tailwindcss/vite": "^4.0.0-alpha.17",
         "@tsconfig/node20": "^20.1.4",
