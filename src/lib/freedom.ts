@@ -4,6 +4,10 @@ import { FIRE_TIME, MILLIONAIRE_TIME, MONTH_TIME, YEAR_TIME } from '@/lib/consta
 
 function calculateFreedom(timeLeft: number, earning: boolean): Freedom {
     if (earning) {
+        if (timeLeft <= -20 * YEAR_TIME) {
+            return 'millionaire';
+        }
+
         if (timeLeft < 5 * YEAR_TIME) {
             return 'fire';
         }
