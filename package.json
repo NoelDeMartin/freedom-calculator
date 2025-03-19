@@ -7,7 +7,7 @@
         "build": "vite build",
         "dev": "vite",
         "lint": "noeldemartin-lint src",
-        "test": "playwright test",
+        "test": "playwright test --ignore-snapshots",
         "test-with-snapshots": "docker run --workdir /app/ --rm -v ./:/app mcr.microsoft.com/playwright:v1.49.1 npx playwright test"
     },
     "dependencies": {
