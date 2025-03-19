@@ -36,4 +36,4 @@ jobs:
                   node-version-file: '.nvmrc'
                   cache: 'npm'
             - run: npm ci
-            - name: npx noeldemartin-deploy-app freedom-calculator.noeldemartin.com
+            - run: npx noeldemartin-deploy-app freedom-calculator.noeldemartin.com
