@@ -79,7 +79,7 @@
                         >
                             (congrats on saving so much, but
                             <a
-                                href="https://mkorostoff.github.io/1-pixel-wealth/"
+                                href="https://eattherichtextformat.github.io/1-pixel-wealth/"
                                 target="_blank"
                                 class="clickable-target underline hover:text-sky-900 focus-visible:bg-sky-100 focus-visible:text-sky-900 focus-visible:decoration-sky-400 focus-visible:decoration-2 focus-visible:outline-0"
                             >you've still got a long way to go</a>)
